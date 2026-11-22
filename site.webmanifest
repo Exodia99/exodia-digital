@@ -1,0 +1,12 @@
+{
+  "name": "Exodia Digital",
+  "short_name": "Exodia",
+  "description": "Web solutions, digital growth and business automation.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0c1e47",
+  "icons": [
+    { "src": "/assets/images/owl-emblem.webp", "sizes": "640x640", "type": "image/webp" }
+  ]
+}

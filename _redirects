@@ -1,0 +1,7 @@
+# Cloudflare Pages redirects
+# Docs: https://developers.cloudflare.com/pages/configuration/redirects/
+# Format: /from  /to  [status]
+#
+# Examples (uncomment when needed):
+# /index.html  /  301
+# /book        /#contact  302
