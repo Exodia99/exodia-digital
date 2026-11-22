@@ -1,0 +1,12 @@
+/* Privacy notice page only. Uses the site's colours from styles.css. */
+.privacy{padding:56px 0 72px}
+.privacy .wrap{max-width:760px}
+.privacy h1{font-size:clamp(32px,4vw,44px);font-weight:800;letter-spacing:-.02em}
+.privacy .meta{color:var(--mute);margin:10px 0 28px}
+.privacy h2{font-size:22px;font-weight:700;margin:34px 0 10px;max-width:none}
+.privacy h3{font-size:17px;font-weight:600;margin:18px 0 6px}
+.privacy p,.privacy li{color:var(--ink)}
+.privacy p{margin:0 0 12px}
+.privacy ul{margin:0 0 12px;padding-left:20px}
+.privacy a:not(.btn){color:var(--ink);font-weight:600}
+.privacy .back{margin-top:36px}
