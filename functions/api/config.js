@@ -2,6 +2,7 @@
 
 import { aiSwitchOn, dailyCap } from "../lib/budget.js";
 import { json } from "../lib/guard.js";
+import { emailSettings } from "../lib/notify.js";
 
 // Setup diagnostics are shown only when BOTH are true:
 //   1. EXODIA_SETUP_DIAGNOSTICS is exactly "true" (set in the Preview environment only), and
@@ -32,6 +33,7 @@ export function onRequest({ request, env }) {
 
   // Which settings are present: true/false only, never any value.
   if (diagnosticsAllowed(request, env)) {
+    const email = emailSettings(env);
     data.setup = {
       aiBinding: Boolean(env.AI),
       dbBinding: Boolean(env.DB),
@@ -41,6 +43,9 @@ export function onRequest({ request, env }) {
       turnstileSecretKey: isSet(env.TURNSTILE_SECRET_KEY),
       sessionSecret: isSet(env.SESSION_SECRET) && env.SESSION_SECRET.length >= 32,
       ipHashSalt: isSet(env.IP_HASH_SALT) && env.IP_HASH_SALT.length >= 16,
+      emailEnabled: email.enabled,
+      appsScriptUrl: email.urlOk,
+      appsScriptSecret: email.secretOk,
     };
   }
   return json(data);

@@ -3,6 +3,7 @@
 // No endpoint returns lead data. Leads are viewed in the Cloudflare dashboard (D1 console).
 
 import { json, sameOrigin, readJson, clean, visitorKey, allow, verifyTurnstile } from "../lib/guard.js";
+import { notifyLead, EMAIL_CONSENT_VERSION } from "../lib/notify.js";
 
 const SERVICES = [
   "New website",
@@ -12,7 +13,7 @@ const SERVICES = [
   "Not sure yet",
 ];
 const TIMES = ["morning", "afternoon", "evening"];
-const CONSENT_VERSION = "2026-11-draft";
+const CONSENT_VERSION = EMAIL_CONSENT_VERSION; // privacy notice version "2026-11-draft-2"
 const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]{1,64}@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/;
 
 function manilaDate(offsetDays) {
@@ -80,6 +81,20 @@ async function notifyTelegram(env, ref, lead, isRequest) {
   }
 }
 
+// Hand work to waitUntil() so it runs after the response. Errors, even immediate ones, are caught.
+function runInBackground(waitUntil, task) {
+  if (typeof waitUntil !== "function") return;
+  try {
+    waitUntil(
+      Promise.resolve()
+        .then(task)
+        .catch(() => console.log("notify: background-error"))
+    );
+  } catch {
+    /* the response does not depend on background work */
+  }
+}
+
 export async function onRequest({ request, env, waitUntil }) {
   if (request.method !== "POST") return json({ status: "error" }, 405);
   if (!sameOrigin(request)) return json({ status: "error", message: "Request not allowed." }, 403);
@@ -131,5 +146,8 @@ export async function onRequest({ request, env, waitUntil }) {
   }
 
   waitUntil(notifyTelegram(env, ref, lead, isRequest));
+  // Best-effort emails (owner notification + customer receipt), after the lead is saved. Any error
+  // in there is caught and logged; it can never change this response.
+  runInBackground(waitUntil, () => notifyLead(env, ref));
   return json({ status: "ok", ref, request: isRequest });
 }

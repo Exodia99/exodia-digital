@@ -7,7 +7,7 @@
 //   Settings > Domains & Routes: disable the workers.dev route (it is not needed)
 //
 // Deletes: leads older than 12 months, rate-limit rows older than 2 days, usage rows older than
-// 90 days. Each run is recorded in cleanup_runs.
+// 90 days, and email status rows whose lead was deleted. Each run is recorded in cleanup_runs.
 
 export default {
   async scheduled(controller, env, ctx) {
@@ -18,6 +18,12 @@ export default {
       db.prepare("DELETE FROM ai_usage WHERE day < date('now', '-90 days')"),
     ]);
     const [leads, limits, usage] = results.map((r) => r.meta?.changes ?? 0);
+    // Email status rows whose lead is gone. Separate, so a database without this table still cleans up.
+    try {
+      await db.prepare("DELETE FROM lead_notifications WHERE ref NOT IN (SELECT ref FROM leads)").run();
+    } catch {
+      /* table not created in this database */
+    }
     await db
       .prepare("INSERT INTO cleanup_runs (leads_deleted, rate_limits_deleted, usage_deleted) VALUES (?1, ?2, ?3)")
       .bind(leads, limits, usage)

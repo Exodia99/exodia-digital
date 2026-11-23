@@ -42,6 +42,22 @@ CREATE TABLE IF NOT EXISTS rate_limits (
   PRIMARY KEY (key, window_start)
 );
 
+-- Best-effort email status per lead (owner notification + customer receipt). No personal data.
+-- Statuses: pending, sending (lease_until = unix seconds), sent, failed, unknown, skipped, disabled.
+CREATE TABLE IF NOT EXISTS lead_notifications (
+  ref                  TEXT PRIMARY KEY,                             -- leads.ref
+  created_at           TEXT NOT NULL DEFAULT (datetime('now')),      -- UTC
+  owner_status         TEXT NOT NULL
+                       CHECK (owner_status IN ('pending', 'sending', 'sent', 'failed', 'unknown', 'disabled')),
+  customer_status      TEXT NOT NULL
+                       CHECK (customer_status IN ('pending', 'sending', 'sent', 'failed', 'unknown', 'skipped', 'disabled')),
+  customer_skip_reason TEXT,                                         -- same-address-24h, daily-cap, gmail-quota
+  attempts             INTEGER NOT NULL DEFAULT 0,
+  lease_until          INTEGER NOT NULL DEFAULT 0,
+  last_code            TEXT,
+  updated_at           TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 -- One row per run of the daily cleanup Worker.
 CREATE TABLE IF NOT EXISTS cleanup_runs (
   id                  INTEGER PRIMARY KEY AUTOINCREMENT,
