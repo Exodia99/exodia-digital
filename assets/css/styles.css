@@ -155,7 +155,7 @@ footer .fbar{display:block;border-top:1px solid rgba(255,255,255,.18);margin-top
 .feats>div{gap:.6cqw;padding:0 1.1cqw;font-size:max(11px,.82cqw)}
 .feats svg{width:2.1cqw;height:2.1cqw}
 .mock{position:absolute;inset:0;width:auto;transform:none;z-index:2;pointer-events:none}
-.owl{position:absolute;left:37.2cqw;top:-1.4cqw;width:31cqw;height:auto;z-index:2}
+.owl{position:absolute;left:35.8cqw;top:-1.4cqw;width:30cqw;height:auto;z-index:2}
 .shot2{position:absolute;left:60.6cqw;top:3.2cqw;width:39.4cqw}
 }
 @media(max-width:1279px){
