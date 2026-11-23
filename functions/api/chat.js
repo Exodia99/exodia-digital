@@ -70,8 +70,10 @@ export async function onRequest({ request, env }) {
   let session = null;
   try {
     if (!(await checkSession(env, body.session, visitor))) {
-      if (!(await verifyTurnstile(body.turnstile, "chat", request, env))) {
-        return json({ status: "verify", reply: "Please complete the quick security check, then send your message again." }, 403);
+      const check = await verifyTurnstile(body.turnstile, "chat", request, env);
+      if (!check.ok) {
+        console.log(`turnstile chat rejected: ${check.reason}`);
+        return json({ status: "verify", reason: check.reason, reply: "The security check didn't go through. Please send your message again." }, 403);
       }
       session = await createSession(env, visitor);
     }

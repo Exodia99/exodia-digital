@@ -105,8 +105,10 @@ export async function onRequest({ request, env, waitUntil }) {
     return json({ status: "offline" }, 503);
   }
 
-  if (!(await verifyTurnstile(body.turnstile, "lead", request, env))) {
-    return json({ status: "verify", message: "Please complete the security check and send again." }, 403);
+  const check = await verifyTurnstile(body.turnstile, "lead", request, env);
+  if (!check.ok) {
+    console.log(`turnstile lead rejected: ${check.reason}`); // visible in Cloudflare Functions real-time logs
+    return json({ status: "verify", reason: check.reason, message: "The security check didn't go through. Please try again." }, 403);
   }
 
   const ref = newRef();

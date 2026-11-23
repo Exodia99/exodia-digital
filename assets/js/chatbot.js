@@ -186,26 +186,51 @@
     return state.turnstile;
   }
 
-  function humanCheck(action, box) {
+  // Runs Turnstile and resolves with a one-time token. The widget stays invisible unless
+  // Cloudflare needs the visitor to click; then `onInteractive` lets the caller say so.
+  // Rejects with Error("turnstile:<code>") so the visitor (and the owner) can see why.
+  function humanCheck(action, box, onInteractive) {
     return loadTurnstile().then(function (ts) {
       return new Promise(function (resolve, reject) {
         box.textContent = "";
         var id = null;
-        var timer = setTimeout(function () { done(); reject(new Error("timeout")); }, 90000);
-        function done() {
+        var finished = false;
+        var timer = setTimeout(function () { fail("timeout"); }, 120000);
+        function cleanup() {
+          finished = true;
           clearTimeout(timer);
           setTimeout(function () { try { if (id !== null) ts.remove(id); } catch (e) {} }, 0);
         }
-        id = ts.render(box, {
-          sitekey: state.config.siteKey,
-          action: action,
-          appearance: "interaction-only",
-          callback: function (token) { done(); resolve(token); },
-          "error-callback": function () { done(); reject(new Error("turnstile")); },
-          "expired-callback": function () { done(); reject(new Error("expired")); },
-        });
+        function fail(code) {
+          if (finished) return;
+          cleanup();
+          reject(new Error("turnstile:" + code));
+        }
+        try {
+          id = ts.render(box, {
+            sitekey: state.config.siteKey,
+            action: action,
+            appearance: "interaction-only",
+            callback: function (token) {
+              if (finished) return;
+              cleanup();
+              resolve(token);
+            },
+            "before-interactive-callback": function () { if (onInteractive) onInteractive(); },
+            "error-callback": function (code) { fail(code || "error"); },
+            "expired-callback": function () { fail("expired"); },
+            "timeout-callback": function () { fail("interaction-timeout"); },
+          });
+        } catch (e) {
+          fail("render-failed");
+        }
       });
     });
+  }
+
+  function codeOf(err) {
+    var m = err && /^turnstile:(.+)$/.exec(err.message || "");
+    return m ? m[1] : "";
   }
 
   // ---------- sending a chat message ----------
@@ -226,7 +251,9 @@
     });
     messages.push({ role: "user", content: text });
 
-    var tokenStep = state.session ? Promise.resolve(null) : humanCheck("chat", tsBox);
+    var tokenStep = state.session
+      ? Promise.resolve(null)
+      : humanCheck("chat", tsBox, function () { typing.textContent = "Please complete the quick security check below."; });
     tokenStep
       .then(function (token) {
         return fetch("/api/chat", {
@@ -239,14 +266,21 @@
         typing.remove();
         if (data && data.session) state.session = data.session;
         var reply = data && typeof data.reply === "string" ? data.reply : OFFLINE_TEXT;
+        if (data && data.status === "verify") {
+          state.session = null;
+          bubble("bot", reply + (data.reason ? " (code: " + data.reason + ")" : ""));
+          return;
+        }
         bubble("bot", reply);
         if (data && data.status === "ok") state.pairs.push([text, reply]);
-        else if (data && data.status === "verify") state.session = null;
         else if (data && data.status === "offline") setAi(false);
       })
-      .catch(function () {
+      .catch(function (err) {
         typing.remove();
-        bubble("bot", "Sorry, the security check or connection didn't work. Please try again, or use \"Request a free consultation\".");
+        var code = codeOf(err);
+        bubble("bot", code
+          ? "The security check couldn't be completed (code: " + code + "). Please try again, or use \"Request a free consultation\"."
+          : "Sorry, the connection didn't work. Please try again, or use \"Request a free consultation\".");
       })
       .then(function () {
         state.busy = false;
@@ -324,7 +358,7 @@
     loadConfig()
       .then(function (c) {
         if (!c.leads) throw new Error("offline");
-        return humanCheck("lead", leadTs);
+        return humanCheck("lead", leadTs, function () { leadStatus.textContent = "Please complete the security check above the button."; });
       })
       .then(function (token) {
         data.turnstile = token;
@@ -332,10 +366,16 @@
       })
       .then(function (res) {
         if (res && res.status === "ok") { leadStatus.textContent = ""; showLeadSuccess(res.ref, Boolean(res.request)); }
-        else if (res && (res.status === "invalid" || res.status === "verify" || res.status === "limited")) showLeadError(res.message || "Please check the form and try again.");
+        else if (res && res.status === "verify") showLeadError((res.message || "The security check didn't go through. Please try again.") + (res.reason ? " (code: " + res.reason + ")" : ""), data);
+        else if (res && (res.status === "invalid" || res.status === "limited")) showLeadError(res.message || "Please check the form and try again.");
         else showLeadError("We couldn't send your request right now.", data);
       })
-      .catch(function () { showLeadError("We couldn't send your request right now.", data); })
+      .catch(function (err) {
+        var code = codeOf(err);
+        showLeadError(code
+          ? "The security check couldn't be completed (code: " + code + "). Please try again."
+          : "We couldn't send your request right now.", data);
+      })
       .then(function () { leadSubmit.disabled = false; });
   });
 

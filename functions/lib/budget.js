@@ -40,7 +40,8 @@ export function dailyCap(env) {
 }
 
 export function aiSwitchOn(env) {
-  return env.AI_ENABLED === "true" && dailyCap(env) > 0;
+  const enabled = typeof env.AI_ENABLED === "string" && env.AI_ENABLED.trim().toLowerCase() === "true";
+  return enabled && dailyCap(env) > 0;
 }
 
 function neurons(inputTokens, outputTokens) {

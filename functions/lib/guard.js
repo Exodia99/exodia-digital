@@ -79,26 +79,37 @@ export async function allow(db, key, windowSeconds, limit) {
 }
 
 // Server-side Turnstile check. The token must be valid, for this hostname and for this action.
+// Returns { ok, reason }. `reason` is a short code (Cloudflare's own error codes or ours); it
+// never contains the secret key or the token, so it is safe to log and to return to the browser.
 export async function verifyTurnstile(token, expectedAction, request, env) {
-  if (typeof token !== "string" || token.length === 0 || token.length > 2048) return false;
-  if (!env.TURNSTILE_SECRET_KEY) return false;
+  if (typeof token !== "string" || token.length === 0) return { ok: false, reason: "missing-token" };
+  if (token.length > 2048) return { ok: false, reason: "token-too-long" };
+  // Trim: a secret pasted with a trailing space or line break is rejected by Cloudflare.
+  const secret = typeof env.TURNSTILE_SECRET_KEY === "string" ? env.TURNSTILE_SECRET_KEY.trim() : "";
+  if (!secret) return { ok: false, reason: "missing-secret" };
+
   const body = new FormData();
-  body.append("secret", env.TURNSTILE_SECRET_KEY);
+  body.append("secret", secret);
   body.append("response", token);
   const ip = request.headers.get("CF-Connecting-IP");
   if (ip) body.append("remoteip", ip);
+
+  let data;
   try {
     const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body });
-    if (!res.ok) return false;
-    const data = await res.json();
-    return (
-      data.success === true &&
-      data.action === expectedAction &&
-      data.hostname === new URL(request.url).hostname
-    );
+    if (!res.ok) return { ok: false, reason: `siteverify-http-${res.status}` };
+    data = await res.json();
   } catch {
-    return false;
+    return { ok: false, reason: "siteverify-unreachable" };
   }
+
+  if (data.success !== true) {
+    const codes = Array.isArray(data["error-codes"]) ? data["error-codes"].filter((c) => typeof c === "string") : [];
+    return { ok: false, reason: codes.length ? codes.join(",").slice(0, 120) : "not-successful" };
+  }
+  if (data.action !== expectedAction) return { ok: false, reason: "action-mismatch" };
+  if (data.hostname !== new URL(request.url).hostname) return { ok: false, reason: "hostname-mismatch" };
+  return { ok: true, reason: "ok" };
 }
 
 // ---- Signed chat sessions -------------------------------------------------------------------
