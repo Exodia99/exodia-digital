@@ -94,14 +94,22 @@ export async function verifyTurnstile(token, expectedAction, request, env) {
   const ip = request.headers.get("CF-Connecting-IP");
   if (ip) body.append("remoteip", ip);
 
-  let data;
+  let res;
   try {
-    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body });
-    if (!res.ok) return { ok: false, reason: `siteverify-http-${res.status}` };
-    data = await res.json();
+    res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body });
   } catch {
     return { ok: false, reason: "siteverify-unreachable" };
   }
+  // Cloudflare answers some rejections (for example a wrong secret) with HTTP 400 and puts the
+  // real reason in the JSON body, so read the body whatever the status is.
+  let data = null;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+  if (!data || typeof data !== "object") return { ok: false, reason: `siteverify-http-${res.status}` };
+  if (!res.ok && data.success === true) return { ok: false, reason: `siteverify-http-${res.status}` };
 
   if (data.success !== true) {
     const codes = Array.isArray(data["error-codes"]) ? data["error-codes"].filter((c) => typeof c === "string") : [];
