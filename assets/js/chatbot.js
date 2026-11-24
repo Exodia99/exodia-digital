@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  var EMAIL = "exodia.digitals@gmail.com";
+  var EMAIL = "info@exodiadigitals.com";
   var MAX_CHARS = 500;
   var MAX_PAIRS = 5;
   var TURNSTILE_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";

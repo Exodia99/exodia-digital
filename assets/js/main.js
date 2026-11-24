@@ -1,4 +1,4 @@
-var CONTACT_EMAIL="exodia.digitals@gmail.com";
+var CONTACT_EMAIL="info@exodiadigitals.com";
 var REVIEWS=[];/* add {quote,name,role} when you have real client reviews */
 document.getElementById('f').addEventListener('submit',function(e){
  e.preventDefault();var d=new FormData(this),ok=document.getElementById('ok');

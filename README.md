@@ -36,7 +36,7 @@ Then open <http://localhost:8080>.
 
 - **Client reviews:** the "What clients say" section stays hidden until you add real reviews to
   `REVIEWS` in `assets/js/main.js`, for example `{quote: "...", name: "...", role: "..."}`.
-- **Contact form:** opens the visitor's email app with a pre-filled message to `exodia.digitals@gmail.com`
+- **Contact form:** opens the visitor's email app with a pre-filled message to `info@exodiadigitals.com`
   (`CONTACT_EMAIL` in `assets/js/main.js`).
 - **Domain:** once confirmed, add canonical, `og:url` and `og:image` tags to `index.html`, and update
   `sitemap.xml` and `robots.txt`.

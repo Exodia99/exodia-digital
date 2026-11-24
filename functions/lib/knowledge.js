@@ -54,7 +54,7 @@ RECENT WORK (shown on the website)
 - Eco-Control Pest Control Services: pest management site for homes, businesses and industrial facilities.
 
 CONTACT
-- Email: exodia.digitals@gmail.com
+- Email: info@exodiadigitals.com
 - Phone: 0991-971-1850 and (02) 8645-9012
 - Facebook: facebook.com/ExodiaDigital99 · Instagram: @exodia_digitals · TikTok: @exodia_digital
 `.trim();
