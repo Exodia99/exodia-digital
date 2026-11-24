@@ -62,7 +62,7 @@
 
   var closeBtn = el("button", { type: "button", className: "xd-chat-close", "aria-label": "Close chat" }, [svg("M6 6l12 12M18 6L6 18")]);
   var head = el("div", { className: "xd-chat-head" }, [
-    el("img", { src: "assets/images/owl-emblem.webp", alt: "", width: "36", height: "36" }),
+    el("img", { src: "/assets/images/exodia-digitals-emblem.webp", alt: "", width: "36", height: "36" }),
     el("div", { className: "xd-chat-titles" }, [
       el("strong", { id: "xd-chat-title", text: "EXODIA DIGITAL Assistant" }),
       el("small", { text: "AI assistant · English, Filipino, Taglish" }),
