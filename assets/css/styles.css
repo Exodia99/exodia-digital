@@ -444,3 +444,26 @@ footer{position:relative}
 @media(max-width:900px){.fq-grid{grid-template-columns:1fr;gap:20px}.fq-side{position:static;max-width:440px;margin:10px auto 0;width:100%}.fq-owlwrap{width:220px}}
 @media(max-width:600px){#faq .fq-list details p{padding-left:20px}#faq .fq-list summary{font-size:15.5px;padding:16px}}
 @media(prefers-reduced-motion:reduce){.fq-owl{animation:none}#faq .fq-list details{transition:none}}
+
+/* Contact v2 */
+.ct-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:56px;align-items:start}
+#contact .ct-main form{max-width:none;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;box-shadow:0 20px 44px rgba(0,0,0,.25)}
+#contact .ct-main input,#contact .ct-main select,#contact .ct-main textarea{border-radius:10px;border:2px solid transparent;transition:border-color .2s,box-shadow .2s}
+#contact .ct-main input:focus,#contact .ct-main select:focus,#contact .ct-main textarea:focus{outline:none;border-color:var(--cy);box-shadow:0 0 0 4px rgba(245,184,0,.2)}
+#contact .ct-main .btn{justify-self:start}
+.ct-side{position:relative;display:flex;flex-direction:column;align-items:center;padding-top:30px}
+.ct-owlwrap{position:relative;width:min(360px,96%);margin-bottom:-40px;z-index:0}
+.ct-ring{position:absolute;left:50%;top:56%;width:84%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#1d3a78 0,#132b5f 60%,transparent 61%);box-shadow:0 0 0 10px rgba(245,184,0,.18),0 0 0 22px rgba(245,184,0,.07)}
+.ct-owl{position:relative;display:block;width:100%;height:auto;filter:drop-shadow(0 16px 22px rgba(0,0,0,.4));animation:ctNod 5s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes ctNod{0%,100%{transform:rotate(0)}50%{transform:rotate(-2deg) translateY(-4px)}}
+.ct-card{position:relative;z-index:1;width:100%;background:#fff;color:var(--ink);border-radius:20px;padding:26px 24px 22px;border-bottom:5px solid var(--cy);box-shadow:0 20px 44px rgba(0,0,0,.3)}
+#contact .ct-card h3{color:var(--ink);font-size:20px;margin:0 0 14px}
+.ct-line{display:flex;align-items:center;gap:14px;padding:11px 10px;margin:0 -10px;border-radius:12px;color:var(--ink);text-decoration:none;font:700 15.5px Sora,sans-serif;transition:background .2s}
+.ct-line:hover{background:#fff6d6}
+.ct-line small{display:block;font:500 12px Inter,sans-serif;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.ct-ic{flex:none;width:42px;height:42px;border-radius:12px;background:var(--navy);color:var(--cy);display:grid;place-items:center}
+.ct-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:900px){.ct-grid{grid-template-columns:1fr;gap:24px}.ct-side{max-width:440px;margin:0 auto;width:100%;padding-top:0}.ct-owlwrap{width:280px}}
+@media(max-width:600px){#contact .ct-main form{padding:20px}}
+@media(prefers-reduced-motion:reduce){.ct-owl{animation:none}}
+
