@@ -467,3 +467,17 @@ footer{position:relative}
 @media(max-width:600px){#contact .ct-main form{padding:20px}}
 @media(prefers-reduced-motion:reduce){.ct-owl{animation:none}}
 
+/* Services owl */
+.svc-top{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.svc-intro{padding-bottom:6px}
+.svc-top .sub{margin-bottom:40px}
+.svc-mascot{position:relative;flex:none;width:min(330px,30%);margin:-30px 1% -64px 0}
+.svc-owl{position:relative;display:block;width:100%;height:auto;filter:drop-shadow(0 16px 22px rgba(0,0,0,.4));transform-origin:30% 90%;animation:svcShout 4s ease-in-out infinite}
+@keyframes svcShout{0%,100%{transform:rotate(0)}45%{transform:rotate(-2.5deg) translateY(-4px)}55%{transform:rotate(1deg)}}
+.svc-wave{position:absolute;right:-6%;top:6%;width:44%;aspect-ratio:1;border-radius:50%;border:4px solid transparent;border-right-color:rgba(245,184,0,.75);animation:svcWave 2.4s ease-out infinite}
+.svc-wave.w2{animation-delay:1.2s}
+@keyframes svcWave{0%{transform:scale(.6);opacity:0}30%{opacity:1}100%{transform:scale(1.25);opacity:0}}
+#services .svc-grid{position:relative;z-index:1}
+@media(max-width:900px){.svc-top{flex-direction:column;align-items:stretch;gap:0}.svc-mascot{width:230px;align-self:flex-end;margin:-10px 4% -48px 0}.svc-top .sub{margin-bottom:10px}}
+@media(max-width:420px){.svc-mascot{width:190px;margin-bottom:-40px}}
+@media(prefers-reduced-motion:reduce){.svc-owl,.svc-wave{animation:none}.svc-wave{display:none}}
