@@ -481,3 +481,10 @@ footer{position:relative}
 @media(max-width:900px){.svc-top{flex-direction:column;align-items:stretch;gap:0}.svc-mascot{width:230px;align-self:flex-end;margin:-10px 4% -48px 0}.svc-top .sub{margin-bottom:10px}}
 @media(max-width:420px){.svc-mascot{width:190px;margin-bottom:-40px}}
 @media(prefers-reduced-motion:reduce){.svc-owl,.svc-wave{animation:none}.svc-wave{display:none}}
+
+/* Recent Work: DolfoWorks wide card */
+.wk-grid .wk-wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:30px;align-items:center}
+.wk-grid .wk-wide .wk-text{padding:4px 8px}
+.wk-grid .wk-wide h3{font-size:clamp(24px,2.4vw,30px)}
+.wk-grid .wk-wide p{font-size:16.5px}
+@media(max-width:820px){.wk-grid .wk-wide{grid-template-columns:1fr;gap:0}.wk-grid .wk-wide .wk-text{padding:18px 6px 4px}}
