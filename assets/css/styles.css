@@ -526,3 +526,10 @@ footer{position:relative}
 .ind-dots{left:4%;right:auto;top:auto;bottom:90px}
 @media(max-width:900px){.ind-head{flex-direction:column;align-items:stretch;gap:0}.ind-mascot{width:230px;align-self:flex-end;margin:-10px 4% -36px 0}.ind-sec .sub{margin-bottom:10px}}
 @media(prefers-reduced-motion:reduce){.ind-owl{animation:none}}
+/* Who we build for: owl position v2 */
+.ind-head{align-items:center;margin-bottom:34px}
+.ind-sec .sub{margin-bottom:0}
+.ind-mascot{width:min(360px,32%);margin:0 2% 0 0;display:grid;place-items:center}
+.ind-glow{position:absolute;left:50%;top:52%;width:78%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#ffe7a0 0,#fff0c2 55%,transparent 70%);box-shadow:0 0 0 10px rgba(245,184,0,.12)}
+.ind-owl{position:relative}
+@media(max-width:900px){.ind-head{align-items:stretch;margin-bottom:24px}.ind-mascot{width:240px;align-self:center;margin:18px auto 0}.ind-sec .sub{margin-bottom:0}}
