@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /showcase/
 
 Sitemap: https://exodia-digital.pages.dev/sitemap.xml

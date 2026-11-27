@@ -16,7 +16,7 @@
       var frame = document.createElement("iframe");
       frame.src = url;
       frame.title = title + " website preview";
-      frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups");
+      frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation");
       frame.setAttribute("referrerpolicy", "no-referrer");
       view.appendChild(frame);
     } else {
