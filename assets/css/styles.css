@@ -515,3 +515,14 @@ footer{position:relative}
 .ind-foot .btn svg{width:18px;height:18px;transition:transform .2s}.ind-foot .btn:hover svg{transform:translateX(3px)}
 @media(max-width:820px){.ind-sec{padding:72px 0 96px}.ind-chip{padding:11px 18px;font-size:14.5px}.ind-chip svg{width:22px;height:22px}.ind-dots{display:none}}
 @media(prefers-reduced-motion:reduce){.ind-rows{-webkit-mask-image:none;mask-image:none}.ind-row{width:auto}.ind-track{animation:none!important;flex-wrap:wrap;justify-content:center;width:100%}.ind-track[aria-hidden]{display:none}}
+/* Who we build for: header v2 */
+.ind-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;text-align:left}
+.ind-intro{flex:1;min-width:0}
+.ind-sec h2{font-size:clamp(32px,4.2vw,50px);margin:0}
+.ind-sec .sub{margin:18px 0 38px;max-width:56ch}
+.ind-mascot{flex:none;width:min(340px,30%);margin:-20px 1% -46px 0;position:relative;z-index:1}
+.ind-owl{display:block;width:100%;height:auto;filter:drop-shadow(0 14px 18px rgba(14,26,51,.22));transform-origin:30% 90%;animation:indPoint 4.5s ease-in-out infinite}
+@keyframes indPoint{0%,100%{transform:rotate(0)}50%{transform:rotate(-2deg) translateY(-5px)}}
+.ind-dots{left:4%;right:auto;top:auto;bottom:90px}
+@media(max-width:900px){.ind-head{flex-direction:column;align-items:stretch;gap:0}.ind-mascot{width:230px;align-self:flex-end;margin:-10px 4% -36px 0}.ind-sec .sub{margin-bottom:10px}}
+@media(prefers-reduced-motion:reduce){.ind-owl{animation:none}}
