@@ -28,7 +28,9 @@
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
   X-Robots-Tag: noindex, nofollow
 
-# Eco-Control demo is a single HTML export with inline styles and scripts
+# Eco-Control demo is a self-unpacking single-file export: it decodes its own images, fonts
+# and React into blob: URLs and runs its page code with new Function, so it needs blob:,
+# inline code and eval. Still framed only by this site and blocked from loading anything outside.
 /showcase/ecocontrol/*
   ! Content-Security-Policy
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline' blob:; font-src 'self' data: blob: https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' data: blob:; form-action 'self'; frame-src 'self' blob:; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
